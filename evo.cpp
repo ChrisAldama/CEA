@@ -4,7 +4,7 @@
 
 
 
-double Evo::fitness(const Evo::Vector &out, const Evo::Vector &expected)
+double Evo::fitness(const Vector &out, const Vector &expected)
 {
     if(out.size()  != expected.size()){
         return 0.0;

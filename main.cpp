@@ -3,7 +3,6 @@
 #include "board.h"
 
 using namespace Board;
-using namespace Evo;
 
 int main(int argc, char *argv[])
 {

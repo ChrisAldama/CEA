@@ -1,15 +1,20 @@
 #ifndef BOARD_H
 #define BOARD_H
-
-#include "evo.h"
+#include <memory>
+#include <random>
+#include "vector"
+#include "stimuli.h"
 
 namespace Board {
+
 
 enum class CellType{
     None = 0,
     Axon,
     Dendrite,
-    Body
+    Body,
+    IN,
+    OUT
 };
 
 enum class Direction{
@@ -41,10 +46,24 @@ struct Cell{
     const static int m_amount_dir = 1;
 };
 
-using Tissue = std::shared_ptr<std::vector<Cell>>;
-/*void initTissue(unsigned w, unsigned h){
+using TissueData = std::shared_ptr<std::vector<Cell>>;
+using Activation = std::function<double(double)>;
 
-}*/
+
+struct Tissue {
+    TissueData buffer;
+    unsigned int width;
+    unsigned int height;
+
+};
+
+Tissue initTissue(unsigned w, unsigned h);
+Vector test(const Tissue &tissue, const Stimuli &st, Activation &act);
+double getSum(const Tissue &tissue, const int x, const int y);
+void propagate(const Tissue &tissue, const int x, const int y, double data);
+Cell &getCell(const Tissue &tissue, int x, int y);
+
+
 
 }
 

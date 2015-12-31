@@ -1,5 +1,7 @@
 #include "board.h"
+#include "evo.h"
 #include <random>
+
 
 void Board::Cell::mutate()
 {
@@ -39,4 +41,106 @@ Board::Cell Board::Cell::fromRandom(std::mt19937 &gen)
            static_cast<Direction>(dir(gen)));
 
     return c;
+}
+
+Board::Tissue Board::initTissue(unsigned w, unsigned h)
+{
+    auto tissue_d = Evo::initGenome<Cell>(w*h);
+    Tissue tissue = {tissue_d, w, h};
+    return tissue;
+}
+
+Vector Board::test(const Board::Tissue &tissue, const Stimuli &st, Activation &act)
+{
+    int idx = 0;
+    int c_index = 0;
+    Vector out;
+    const unsigned w = tissue.width;
+    const unsigned h = tissue.height;
+
+    for(unsigned i = 0; i < w; ++i){
+        for(unsigned j = 0; j < h; ++j){
+            Cell &cell = getCell(tissue, j, i);
+            switch(cell.type){
+
+            case CellType::IN:
+                cell.data = st.in[idx];
+                idx = (idx + 1) % st.in.size();
+                break;
+
+            case CellType::OUT:
+                out.push_back(cell.data);
+                break;
+
+            case CellType::Body: {
+                double sum = getSum(tissue, c_index,0);
+                double result = act(sum);
+                propagate(tissue, c_index, result,0);
+
+            }
+
+            case CellType::Axon:
+                break;
+
+            case CellType::Dendrite:
+                break;
+
+            case CellType::None:
+            default:
+                break;
+            }
+            c_index++;
+        }
+    }
+
+    return out;
+}
+
+double Board::getSum(const Board::Tissue &tissue, const int x, const int y)
+{
+    const int nei = 4;
+    const int dim = 2;
+    const int points[nei][dim] = {{x, y - 1},{x+1, y},{x, y - 1},{x - 1, y}};
+    double sum = 0.0;
+
+    for(int i = 0; i < nei; ++i){
+        const Cell &cell = getCell(tissue, points[i][0], points[i][1]);
+        if(cell.type == CellType::Dendrite){
+            sum += cell.data;
+        }
+    }
+
+    return sum;
+}
+
+void Board::propagate(const Board::Tissue &tissue, const int x, const int y, double data)
+{
+    const int nei = 4;
+    const int dim = 2;
+    const int points[nei][dim] = {{x, y - 1},{x+1, y},{x, y - 1},{x - 1, y}};
+
+    for(int i = 0; i < nei; ++i){
+        Cell &cell = getCell(tissue, points[i][0], points[i][1]);
+        if(cell.type == CellType::Axon){
+            cell.data = data;
+        }
+    }
+
+}
+
+Board::Cell &Board::getCell(const Board::Tissue &tissue, const int x, const int y)
+{
+    auto &&buffer = tissue.buffer;
+    const int width = tissue.width;
+    const int height = tissue.height;
+
+    int x_ = x % width;
+    int y_ = y % height;
+
+
+    if(x_ < 0) x_ = width + x_;
+    if(y_ < 0) y_ = height + y_;
+    int idx = y_ * width + x_;
+
+    return buffer->operator[](idx);
 }

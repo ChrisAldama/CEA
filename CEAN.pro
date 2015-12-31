@@ -6,7 +6,8 @@ QT += qml quick widgets
 
 SOURCES += main.cpp \
     board.cpp \
-    evo.cpp
+    evo.cpp \
+    stimuli.cpp
 
 RESOURCES += qml.qrc
 
@@ -18,5 +19,8 @@ include(deployment.pri)
 
 HEADERS += \
     board.h \
-    evo.h
+    evo.h \
+    stimuli.h \
+    vector.h \
+    sigmoid.h
 

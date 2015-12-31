@@ -8,10 +8,9 @@
 #include <numeric>
 #include <memory>
 #include <vector>
+#include "vector.h"
 
 namespace Evo {
-
-using Vector = std::vector<double>;
 
 template<typename T>
 using DNA = std::vector<T>;
@@ -26,7 +25,7 @@ template<typename T>
 using evFunc = std::function<Vector (const T&, const Vector &)>;
 
 
-double fitness(const Evo::Vector &out, const Evo::Vector &expected);
+double fitness(const Vector &out, const Vector &expected);
 
 
 
@@ -35,7 +34,7 @@ DNA_PTR<T> initGenome(const size_t size)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
-    DNA_PTR<T> genes = std::make_shared<DNA<T>>(size);
+    DNA_PTR<T> genes = std::make_shared<DNA<T>>();
 
     for(size_t i = 0; i < size; ++i){
         T g = T::fromRandom(gen);
@@ -58,6 +57,11 @@ void mutate(Evo::DNA<T> &genes, const double prob)
             gene.mutate();
         }
     }
+}
+
+template<typename T>
+void cross(Evo::DNA<T> &genes){
+
 }
 
 
