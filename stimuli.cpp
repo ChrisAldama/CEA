@@ -6,9 +6,11 @@
 #include <QJsonArray>
 #include <QJsonValue>
 #include <QJsonParseError>
+#include <assert.h>
 
 #define INPUT_S "in"
 #define OUTPUT_S "out"
+#define NAME_S "name"
 
 Stimuli::Stimuli()
 {
@@ -17,21 +19,10 @@ Stimuli::Stimuli()
 
 QByteArray Stimuli::toJSon()
 {
-    QString json = "{\"input\":[%1],"
-                   " \"output\":[%2]}";
+    QString json = "{\"in\":[%1],"
+                   " \"out\":[%2]}";
 
-    QStringList arr1;
-    for(const auto &number:in){
-        arr1 << QString::number(number);
-    }
 
-    json = json.arg(arr1.join(','));
-    QStringList arr2;
-    for(const auto &number:out){
-        arr2 << QString::number(number);
-    }
-
-    json = json.arg(arr2.join(','));
     return json.toLocal8Bit();
 
 }
@@ -60,6 +51,29 @@ Stimuli Stimuli::fromFile(const QString &filename)
     return fromJSon(data);
 }
 
+VVector arrayToVector(const QJsonArray &arr)
+{
+    VVector vector;
+    for(const QJsonValue &val : arr){
+        Vector v;
+        if(val.isArray()){
+            QJsonArray subArr = val.toArray();
+            for(const QJsonValue &sVal : subArr){
+                double num = sVal.toDouble();
+                v.push_back(num);
+            }
+        }
+        else if(val.isDouble()){
+            v.push_back(val.toDouble());
+        }
+
+        vector.push_back(v);
+    }
+
+    return vector;
+
+}
+
 Stimuli Stimuli::fromJSon(const QByteArray &json)
 {
     QJsonParseError error;
@@ -70,6 +84,7 @@ Stimuli Stimuli::fromJSon(const QByteArray &json)
     QJsonObject obj = doc.object();
     QJsonValue arr1_v = obj.value(INPUT_S);
     QJsonValue arr2_v = obj.value(OUTPUT_S);
+    QJsonValue name = obj.value(NAME_S);
 
     if(!(arr1_v.isArray() && arr2_v.isArray())){
         return Stimuli();
@@ -78,19 +93,13 @@ Stimuli Stimuli::fromJSon(const QByteArray &json)
     auto arr1 = arr1_v.toArray();
     auto arr2 = arr2_v.toArray();
 
-    Vector in;
-    Vector out;
-
-    for(const auto &val: arr1){
-        in.push_back(val.toDouble());
-    }
-    for(const auto &val: arr2){
-        out.push_back(val.toDouble());
-    }
+    assert(arr1.size() == arr2.size());
 
     Stimuli sti;
-    sti.in = in;
-    sti.out = out;
+    sti.in = arrayToVector(arr1);
+    sti.out = arrayToVector(arr2);
+    sti.name = name.toString("none");
+    sti.samples = arr1.size();
 
     return sti;
 }

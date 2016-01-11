@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 #include "vector.h"
+#include <functional>
 
 namespace Evo {
 
@@ -24,10 +25,7 @@ using Population = std::shared_ptr<std::vector<DNA_PTR<T>>>;
 template<typename T>
 using evFunc = std::function<Vector (const T&, const Vector &)>;
 
-
 double fitness(const Vector &out, const Vector &expected);
-
-
 
 template<typename T>
 DNA_PTR<T> initGenome(const size_t size)
@@ -63,7 +61,6 @@ template<typename T>
 void cross(Evo::DNA<T> &genes){
 
 }
-
 
 template<typename T>
 void populate(Population<T> &pop, const Vector &fit, unsigned n_winners)

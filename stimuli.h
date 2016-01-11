@@ -7,11 +7,14 @@ class Stimuli
 {
 public:
     Stimuli();
-    Vector in;
-    Vector out;
+    VVector in;
+    VVector out;
+    QString name;
+    int samples;
 
     QByteArray toJSon();
     bool saveFile(const QString &filename);
+
 
     static Stimuli fromFile(const QString &filename);
     static Stimuli fromJSon(const QByteArray &json);

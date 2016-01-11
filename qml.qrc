@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>FMenu.qml</file>
     </qresource>
 </RCC>
-

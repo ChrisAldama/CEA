@@ -1,13 +1,17 @@
 TEMPLATE = app
 
-CONFIG += c++14
+CONFIG += c++11
 
 QT += qml quick widgets
 
 SOURCES += main.cpp \
     board.cpp \
     evo.cpp \
-    stimuli.cpp
+    stimuli.cpp \
+    model.cpp \
+    graphics.cpp \
+    iprovider.cpp \
+    controller.cpp
 
 RESOURCES += qml.qrc
 
@@ -22,5 +26,15 @@ HEADERS += \
     evo.h \
     stimuli.h \
     vector.h \
-    sigmoid.h
+    sigmoid.h \
+    model.h \
+    graphics.h \
+    iprovider.h \
+    controller.h
+
+DISTFILES += \
+    or.json \
+    and.json \
+    xor.json
+
 

@@ -4,6 +4,7 @@
 
 
 using Vector = std::vector<double>;
+using VVector = std::vector<Vector>;
 
 #endif // VECTOR
 

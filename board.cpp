@@ -50,47 +50,51 @@ Board::Tissue Board::initTissue(unsigned w, unsigned h)
     return tissue;
 }
 
-Vector Board::test(const Board::Tissue &tissue, const Stimuli &st, Activation &act)
+VVector Board::test(const Board::Tissue &tissue, const Stimuli &st, Activation &act)
 {
     int idx = 0;
     int c_index = 0;
-    Vector out;
+    VVector out;
     const unsigned w = tissue.width;
     const unsigned h = tissue.height;
 
-    for(unsigned i = 0; i < w; ++i){
-        for(unsigned j = 0; j < h; ++j){
-            Cell &cell = getCell(tissue, j, i);
-            switch(cell.type){
+    for(int sample = 0; sample < st.samples; ++sample){
+        Vector current;
+        for(unsigned i = 0; i < w; ++i){
+            for(unsigned j = 0; j < h; ++j){
+                Cell &cell = getCell(tissue, j, i);
+                switch(cell.type){
 
-            case CellType::IN:
-                cell.data = st.in[idx];
-                idx = (idx + 1) % st.in.size();
-                break;
+                case CellType::IN:
+                    cell.data = st.in[sample][idx];
+                    idx = (idx + 1) % st.in.size();
+                    break;
 
-            case CellType::OUT:
-                out.push_back(cell.data);
-                break;
+                case CellType::OUT:
+                    current.push_back(cell.data);
+                    break;
 
-            case CellType::Body: {
-                double sum = getSum(tissue, c_index,0);
-                double result = act(sum);
-                propagate(tissue, c_index, result,0);
+                case CellType::Body: {
+                    double sum = getSum(tissue, c_index,0);
+                    double result = act(sum);
+                    propagate(tissue, c_index, result,0);
 
+                }
+
+                case CellType::Axon:
+                    break;
+
+                case CellType::Dendrite:
+                    break;
+
+                case CellType::None:
+                default:
+                    break;
+                }
+                c_index++;
             }
-
-            case CellType::Axon:
-                break;
-
-            case CellType::Dendrite:
-                break;
-
-            case CellType::None:
-            default:
-                break;
-            }
-            c_index++;
         }
+        out.push_back(current);
     }
 
     return out;

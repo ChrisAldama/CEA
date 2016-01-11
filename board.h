@@ -2,6 +2,7 @@
 #define BOARD_H
 #include <memory>
 #include <random>
+#include <functional>
 #include "vector"
 #include "stimuli.h"
 
@@ -58,7 +59,7 @@ struct Tissue {
 };
 
 Tissue initTissue(unsigned w, unsigned h);
-Vector test(const Tissue &tissue, const Stimuli &st, Activation &act);
+VVector test(const Tissue &tissue, const Stimuli &st, Activation &act);
 double getSum(const Tissue &tissue, const int x, const int y);
 void propagate(const Tissue &tissue, const int x, const int y, double data);
 Cell &getCell(const Tissue &tissue, int x, int y);
