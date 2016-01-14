@@ -5,6 +5,9 @@ Controller::Controller(QObject *parent):
 {
     connect(this, &Controller::newGame,
             this, &Controller::stop);
+    connect(&timer, &QTimer::timeout,[this]{
+        tick();
+    });
 
     timer.setInterval(1000/60);
 }

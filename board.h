@@ -62,6 +62,7 @@ Tissue initTissue(unsigned w, unsigned h);
 VVector test(const Tissue &tissue, const Stimuli &st, Activation &act);
 double getSum(const Tissue &tissue, const int x, const int y);
 void propagate(const Tissue &tissue, const int x, const int y, double data);
+void propagateAxon(const Tissue &tissue, const int x, const int y, double data);
 Cell &getCell(const Tissue &tissue, int x, int y);
 
 

@@ -60,9 +60,9 @@ VVector Board::test(const Board::Tissue &tissue, const Stimuli &st, Activation &
 
     for(int sample = 0; sample < st.samples; ++sample){
         Vector current;
-        for(unsigned i = 0; i < w; ++i){
-            for(unsigned j = 0; j < h; ++j){
-                Cell &cell = getCell(tissue, j, i);
+        for(unsigned j = 0; j < h; ++j){
+            for(unsigned i = 0; i < w; ++i){
+                Cell &cell = getCell(tissue, i, j);
                 switch(cell.type){
 
                 case CellType::IN:
@@ -77,14 +77,16 @@ VVector Board::test(const Board::Tissue &tissue, const Stimuli &st, Activation &
                 case CellType::Body: {
                     double sum = getSum(tissue, c_index,0);
                     double result = act(sum);
-                    propagate(tissue, c_index, result,0);
+                    propagate(tissue, i, j, result);
 
                 }
 
                 case CellType::Axon:
+                    propagateAxon(tissue, i, j, cell.data);
                     break;
 
                 case CellType::Dendrite:
+                    propagateAxon(tissue, i, j, cell.data);
                     break;
 
                 case CellType::None:
@@ -147,4 +149,19 @@ Board::Cell &Board::getCell(const Board::Tissue &tissue, const int x, const int 
     int idx = y_ * width + x_;
 
     return buffer->operator[](idx);
+}
+
+void Board::propagateAxon(const Board::Tissue &tissue, const int x, const int y, double data)
+{
+    const int nei = 4;
+    const int dim = 2;
+    const int points[nei][dim] = {{x, y - 1},{x+1, y},{x, y - 1},{x - 1, y}};
+
+    for(int i = 0; i < nei; ++i){
+        Cell &cell = getCell(tissue, points[i][0], points[i][1]);
+        if(cell.type == CellType::Axon || cell.type == CellType::Dendrite){
+            cell.data = data;
+        }
+    }
+
 }

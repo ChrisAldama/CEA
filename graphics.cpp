@@ -58,3 +58,8 @@ Graphics::colorMap Graphics::defaultColors()
 
     return map;
 }
+
+QImage Graphics::plot(const VVector &output, const Stimuli &st, const QSize &s)
+{
+
+}

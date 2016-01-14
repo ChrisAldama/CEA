@@ -49,6 +49,24 @@ Rectangle {
                 onValueChanged: Controller.speed = value
             }
         }
+
+        RowLayout{
+            ExclusiveGroup{
+                Action {
+                    id: testActio
+                    text: "Test"
+                    checkable: true
+                    onTriggered: Controller.changeMode(0)
+                }
+
+                Action {
+                    id: evAction
+                    text: "Evolve"
+                    checkable: true
+                    onTriggered: Controller.changeMode(1)
+                }
+            }
+        }
     }
 
     ColorDialog {

@@ -32,6 +32,7 @@ signals:
     void newImage(int id);
     void newGame();
     void openFile(const QUrl&);
+    void changeMode(const int m);
 
 public slots:
 
