@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QBrush>
 #include <QPen>
+#include <QFont>
 
 using namespace Board;
 
@@ -15,9 +16,11 @@ QImage Graphics::draw(const Board::Tissue &tissue, const QSize &size, const colo
     int x_c = 0;
     int y_c = 0;
     QPen pen(Qt::white);
-    pen.setWidth(3);
+    QFont font("Verdana");
+    font.setPixelSize(cellSize*0.8);
+    pen.setWidth(3);    
     painter.setPen(pen);
-
+    painter.setFont(font);
     for(unsigned y = 0; y < tissue.height; ++y){
         x_c = 0;
         for(unsigned x = 0; x < tissue.width; ++x){
@@ -27,6 +30,8 @@ QImage Graphics::draw(const Board::Tissue &tissue, const QSize &size, const colo
             QColor color = colors[idx];
             painter.setBrush(QBrush(color));
             painter.drawRect(x_c, y_c, cellSize, cellSize);
+            //QString str = QString::number(cell.data);
+            //painter.drawText(x_c, y_c, cellSize, cellSize,Qt::AlignHCenter | Qt::AlignCenter,str);
             x_c += cellSize;
         }
         y_c += cellSize;
@@ -51,7 +56,7 @@ Graphics::colorMap Graphics::defaultColors()
         map[idx(CellType::None)] = QColor(Qt::black);
         map[idx(CellType::Axon)] = QColor(Qt::green);
         map[idx(CellType::Dendrite)] = QColor(Qt::red);
-        map[idx(CellType::Body)] = QColor(Qt::white);
+        map[idx(CellType::Body)] = QColor(Qt::gray);
         map[idx(CellType::IN)] = QColor(Qt::blue);
         map[idx(CellType::OUT)] = QColor(Qt::yellow);
     }

@@ -4,26 +4,39 @@
 void Model::init(unsigned w, unsigned h)
 {
     network = Board::initTissue(w,h);
+    act = sigmoid<double>;
 }
 
-std::function<double ()> Model::makeCompute(const Stimuli &st)
+Vector Model::plain(const VVector &v)
 {
-    double error = 0;
-    Board::Activation act = sigmoid<double>;
-    //auto ev = Evo::evolve(*network.buffer, 20);
+    Vector res;
+    for(const auto &subV : v){
+        for(const auto &val: subV){
+          res.push_back(val);
+        }
+    }
 
-
-    return [=,&act]{
-
-
-        return error;
-    };
-
+    return res;
 }
 
-std::function<double ()> Model::makeCompute()
+std::function<double ()> Model::makeCompute(int steps)
 {
-    return makeCompute(sti);
+    const Vector out = plain(sti.out);
+    Evo::evFunc eval =
+             [this, steps](const Evo::DNA &net) -> Vector{
+        VVector res;
+        Board::Tissue t = network;
+        t.buffer = std::make_shared<std::vector<Board::Cell>>(net);
+        for(int i = 0; i < steps; ++i){
+            res = Board::test(t, sti, act);
+        }
+
+        return plain(res);
+
+    };   
+    auto evo = Evo::evolve(network.buffer.get(), 20, eval, out);
+    return evo;
+
 }
 
 std::function<VVector (int)> Model::makeSimu()
@@ -32,7 +45,7 @@ std::function<VVector (int)> Model::makeSimu()
     return [this](int steps) -> VVector {
         VVector res;
         for(int i = 0; i < steps; ++i){
-            res = test(network, sti, act);
+            res = Board::test(network, sti, act);
         }
         return res;
     };
@@ -41,7 +54,7 @@ std::function<VVector (int)> Model::makeSimu()
 
 void Model::setSimuli(const Stimuli &st)
 {
-    sti = st;
+    sti = st;    
 }
 
 void Model::openFile(const QString &filename)

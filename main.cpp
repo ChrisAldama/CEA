@@ -1,13 +1,14 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QDebug>
 #include <functional>
 #include "board.h"
 #include "controller.h"
 #include "model.h"
 #include "graphics.h"
 
-using fun = std::function<void ()>;
+using fun = std::function<double ()>;
 using funV = std::function<VVector (int)>;
 
 int main(int argc, char *argv[])
@@ -18,12 +19,15 @@ int main(int argc, char *argv[])
     Model model;
     fun compute = nullptr;
     funV test = nullptr;
+    const int steps = 50;
+    double fitt = 0;
 
 
     auto newGame = [&]{
       ctx.stop();
-      model.init(100,100);
-      compute = model.makeCompute();
+      fitt = 0;
+      model.init(10,10);
+      compute = model.makeCompute(steps);
       test = model.makeSimu();
       ctx.start();
     };
@@ -31,14 +35,21 @@ int main(int argc, char *argv[])
     ctx.tick = [&]{
         auto state = model.getState();
         if( state == Model::State::Testing){
-            auto result = test(10); //steps
+            auto result = test(steps); //steps
             auto image = Graphics::draw(model.data(),
-                                        ctx.provider.lastSize);
-            ctx.registerImage(image);
-
+                                        ctx.provider->size());
+            ctx.registerImage(image);            
         }
         else if(state == Model::State::Evolving){
-            //compute();
+            if(fitt < 0.95){
+                fitt = compute();
+                ctx.addError(1.0 - fitt);
+            }
+            auto result = test(steps);
+            auto image = Graphics::draw(model.data(),
+                                        ctx.provider->size());
+            ctx.registerImage(image);
+            ctx.registerStimuli(model.sti, result);
         }
     };
 
@@ -54,7 +65,7 @@ int main(int argc, char *argv[])
        model.state(state);
     });
 
-    engine.addImageProvider("IProvider", &ctx.provider);
+    engine.addImageProvider("IProvider", ctx.provider);
     engine.rootContext()->setContextProperty("Controller", &ctx);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

@@ -11,6 +11,8 @@
 #define INPUT_S "in"
 #define OUTPUT_S "out"
 #define NAME_S "name"
+#define INS "inputs"
+#define OUTS "outputs"
 
 Stimuli::Stimuli()
 {
@@ -100,6 +102,8 @@ Stimuli Stimuli::fromJSon(const QByteArray &json)
     sti.out = arrayToVector(arr2);
     sti.name = name.toString("none");
     sti.samples = arr1.size();
+    sti.inputs = obj.value(INS).toInt();
+    sti.outputs = obj.value(OUTS).toInt();
 
     return sti;
 }

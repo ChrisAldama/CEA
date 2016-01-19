@@ -6,65 +6,32 @@ import QtQuick.Layouts 1.1
 
 ApplicationWindow {
     visible: true
-    width: 640
-    height: 480
+    width: 1024
+    height: 768
     title: qsTr("CEAN")
 
-    Image {
-        id: view
-        source: "image://IProvider/id"
+    TabView{
         anchors.fill: parent
-    }
-
-    Connections{
-        target: Controller
-        onNewImage: {
-            board.source = "image://IProvider/" + id;
-        }
-    }
-
-    Button {
-        id: cButton
-        text: "+"
-        style: ButtonStyle {
-            background: Rectangle {
-                implicitHeight: 50
-                implicitWidth:  50
-                color: "#FF0000";
-                radius: width* 0.5;
-                border.width: control.activeFocus ? 2 : 1
-                border.color: "#888"
+        Tab{
+            title: "Board"
+            Board{
+                id: board
             }
-            label : Text {
-                font{
-                    pointSize: 30
-                    family: "Hack"
-                }
-                text: cButton.text
-                color: "#FFF"
-                styleColor: "#5c4f4f"
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
+        }
+        Tab {
+            title: "Graphics"
+            ErrorGraph {
 
             }
         }
-        MouseArea {
-            anchors.fill: parent
-            drag.target: parent
-            onClicked: {
+        Tab {
+            title: "Stimuli"
+            Stimuli{
 
-                menu.visible =  true;
-                menu.focus = true;
             }
-
         }
     }
 
-    FMenu {
-        id: menu
-        x: cButton.x
-        y: cButton.y
-        visible: false
-    }
+
 }
 

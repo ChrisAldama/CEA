@@ -27,12 +27,7 @@ Rectangle {
         }
 
         Button {
-            text: Controller.running? "Pause" : "Start"
-            onClicked: Controller.running? Controller.stop() : Controller.start()
-        }
-
-        Button {
-            text: "Restart"
+            text:  "Start"
             onClicked: Controller.newGame()
         }
 

@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>FMenu.qml</file>
+        <file>Board.qml</file>
+        <file>ErrorGraph.qml</file>
+        <file>Stimuli.qml</file>
     </qresource>
 </RCC>

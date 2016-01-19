@@ -15,22 +15,24 @@ public:
         Evolving = 1
     };
 
+    Stimuli sti;
+
     void init(unsigned w, unsigned h);
-    std::function<double ()> makeCompute(const Stimuli &st);
-    std::function<double ()> makeCompute();
+    std::function<double ()> makeCompute(int steps);
     std::function<VVector (int)> makeSimu();
     void setSimuli(const Stimuli &st);
     void openFile(const QString &filename);
     Board::Tissue data();
+    Vector plain(const VVector &v);
 
 
     State getState();
     void state(State st);
 private:
-    Stimuli sti;
+
     Board::Tissue network;
     Board::Activation act = nullptr;
-    State st = State::Testing;
+    State st = State::Evolving;
 };
 
 #endif // MODEL_H

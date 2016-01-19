@@ -42,7 +42,7 @@ struct Cell{
     }
 
     void mutate();
-    static Cell fromRandom(std::mt19937 &gen);
+    static Cell fromRandom();
     const static int m_amount_type = 1;
     const static int m_amount_dir = 1;
 };

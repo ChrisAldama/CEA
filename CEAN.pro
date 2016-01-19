@@ -2,6 +2,8 @@ TEMPLATE = app
 
 CONFIG += c++11
 
+QMAKE_CXXFLAGS += -fopenmp
+QMAKE_LFLAGS += -fopenmp
 QT += qml quick widgets
 
 SOURCES += main.cpp \

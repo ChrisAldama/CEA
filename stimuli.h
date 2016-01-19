@@ -11,6 +11,8 @@ public:
     VVector out;
     QString name;
     int samples;
+    int inputs;
+    int outputs;
 
     QByteArray toJSon();
     bool saveFile(const QString &filename);

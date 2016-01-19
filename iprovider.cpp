@@ -25,3 +25,12 @@ QImage IProvider::requestImage(const QString &id, QSize *size, const QSize &requ
 
     return img;
 }
+
+QSize IProvider::size()
+{
+    if(lastSize.isValid()){
+        return lastSize;
+    }
+
+    return QSize(600,600);
+}
