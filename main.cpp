@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     auto newGame = [&]{
       ctx.stop();
       fitt = 0;
-      model.init(10,10);
+      model.init(100,100);
       compute = model.makeCompute(steps);
       test = model.makeSimu();
       ctx.start();
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
             auto result = test(steps); //steps
             auto image = Graphics::draw(model.data(),
                                         ctx.provider->size());
-            ctx.registerImage(image);            
+            ctx.registerImage(image);
         }
         else if(state == Model::State::Evolving){
             if(fitt < 0.95){

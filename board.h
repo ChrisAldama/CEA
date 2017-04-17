@@ -8,8 +8,7 @@
 
 namespace Board {
 
-
-enum class CellType{
+enum class CellType {
     None = 0,
     Axon,
     Dendrite,
@@ -18,14 +17,13 @@ enum class CellType{
     OUT
 };
 
-enum class Direction{
-    UP= 0,
+enum class Direction {
+    UP = 0,
     RIGHT,
     DOWN,
     LEFT,
     NONE
 };
-
 
 struct Cell{
     CellType type = CellType::None;
@@ -38,7 +36,6 @@ struct Cell{
     }
 
     Cell(){
-
     }
 
     void mutate();

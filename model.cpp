@@ -33,7 +33,7 @@ std::function<double ()> Model::makeCompute(int steps)
 
         return plain(res);
 
-    };   
+    };
     auto evo = Evo::evolve(network.buffer.get(), 20, eval, out);
     return evo;
 
@@ -54,7 +54,7 @@ std::function<VVector (int)> Model::makeSimu()
 
 void Model::setSimuli(const Stimuli &st)
 {
-    sti = st;    
+    sti = st;
 }
 
 void Model::openFile(const QString &filename)
